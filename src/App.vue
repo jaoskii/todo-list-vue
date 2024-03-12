@@ -93,12 +93,18 @@ export default {
   },
   mounted() {
     this.$refs.txtTaskDesc.focus()
-    this.current_tasks = this.todoListState
+    this.fillTODOs()
   },
   methods: {
     ...mapActions(useTodoStore, ['fetchTodoList', 'createTodoList']),
-    fetchTodoList() {
-      this.todoStore.fetchTodoList().then(() => {})
+    fillTODOs() {
+      this.todoStore.fetchTodoList().then((res) => {
+        let returndata = res.data
+        this.todoStore.$patch((state) => {
+          state.todoList = returndata.data
+          this.current_tasks = this.todoListState
+        })
+      })
     },
     addNewTask() {
       if (this.taskForm.description != '') {
@@ -106,11 +112,13 @@ export default {
         Object.keys(this.taskForm).forEach((key) => {
           copyForm[key] = this.taskForm[key]
           this.taskForm[key] = ''
-          if (key == 'urgent') {
+          if (key == 'urgent' || key == 'status') {
+            this.taskForm[key] = 0
             this.taskForm[key] = 0
           }
         })
-        this.todoStore.createTodoList().then(() => {
+        this.todoStore.createTodoList(copyForm).then((res) => {
+          console.log(res)
           this.todoStore.$patch((state) => {
             state.todoList.unshift(copyForm)
           })
@@ -122,7 +130,7 @@ export default {
       } //end if
     },
     toggleUrgency() {
-      this.taskForm.urgent = !this.taskForm.urgent ? false : true
+      this.taskForm.urgent = !this.taskForm.urgent ? 0 : 1
     },
     toggleUrgentTaskOnly() {
       if (this.toggleUrgentTasks) {

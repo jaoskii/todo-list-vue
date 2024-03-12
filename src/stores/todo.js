@@ -4,14 +4,7 @@ import axios from 'axios';
 export const useTodoStore = defineStore('todo', {
   state: () => {
     return { 
-        todoList: [
-          { description: 'YT Intro remix', status: 1, urgent: 0 },
-          { description: 'Twitter News', status: 1, urgent: 0 },
-          { description: 'Magic stuff', status: 1, urgent: 0 },
-          { description: 'Edit Images on Project 1', status: 0, urgent: 1 },
-          { description: 'Edit Images on Project 2', status: 0, urgent: 1 },
-          { description: 'Training', status: 0, urgent: 1 }
-        ],
+        todoList: [],
     }
   },
   getters: {
@@ -20,29 +13,33 @@ export const useTodoStore = defineStore('todo', {
   },
   actions: {
     async fetchTodoList() {
-        /* const url = import.meta.env.VITE_BASE_BACKEND_URL + 'v1/todo';
-        return await axios.get(url).then(function (data) {
-            return data;
+        const url = import.meta.env.VITE_BASE_BACKEND_URL + '/todo';
+        return await axios({
+          method: 'get',
+          url: url,
+        }).then(function (response) {
+          return response;
         }).catch(function (error) {
             return error;
-        }); */
+        })
     },
     async createTodoList(params = {}) {
-       /*  const url = import.meta.env.VITE_BASE_BACKEND_URL + 'v1/todo/create';
+        const url = import.meta.env.VITE_BASE_BACKEND_URL + '/todo/add';
         let config = {
           headers: {
               'Content-Type': 'application/json;charset=UTF-8',
               "Access-Control-Allow-Origin": "*",
           }
         };
+        console.log(params);
         return await axios.post(url, params, config).then(function (data) {
             return data;
         }).catch(function (error) {
             return error;
-        }); */
+        });
     },
-    async updateTodo(params = {}) {
-  /*       const url = import.meta.env.VITE_BASE_BACKEND_URL + 'v1/todo/update';
+    async updateTodo(index, params = {}) {
+        const url = import.meta.env.VITE_BASE_BACKEND_URL + '/todo/update/' + index;
         let config = {
           headers: {
               'Content-Type': 'application/json;charset=UTF-8',
@@ -53,35 +50,35 @@ export const useTodoStore = defineStore('todo', {
             return data;
         }).catch(function (error) {
             return error;
-        }); */
+        });
     },
-    async toggleAsDone(params = {}) {
-  /*       const url = import.meta.env.VITE_BASE_BACKEND_URL + 'v1/todo/update';
+    async toggleAsDone(index, status) {
+        const url = import.meta.env.VITE_BASE_BACKEND_URL + '/todo/tag-done/'+index;
         let config = {
           headers: {
               'Content-Type': 'application/json;charset=UTF-8',
               "Access-Control-Allow-Origin": "*",
           }
         };
-        return await axios.post(url, params, config).then(function (data) {
+        return await axios.post(url, { 'status': status }, config).then(function (data) {
             return data;
         }).catch(function (error) {
             return error;
-        }); */
+        });
     },
-    async removeTodo(params = {}) {
-        /* const url = import.meta.env.VITE_BASE_BACKEND_URL + 'v1/todo/remove';
+    async removeTodo(index) {
+        const url = import.meta.env.VITE_BASE_BACKEND_URL + '/todo/delete/' + index;
         let config = {
           headers: {
               'Content-Type': 'application/json;charset=UTF-8',
               "Access-Control-Allow-Origin": "*",
           }
         };
-        return await axios.post(url, params, config).then(function (data) {
+        return await axios.post(url, {}, config).then(function (data) {
             return data;
         }).catch(function (error) {
             return error;
-        }); */
+        });
     },
   },
   //persist: true,

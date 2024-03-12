@@ -172,7 +172,6 @@ export default {
   methods: {
     ...mapActions(useTodoStore, ['updateTodo', 'removeTodo', 'toggleAsDone']),
     isDoneClass(status) {
-      console.log(status)
       return {
         'text-slate-500 line-through': status,
         '': !status
